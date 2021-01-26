@@ -21,7 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScreen)
 //        window?.rootViewController = UINavigationController(rootViewController: CollectionViewController())
-        window?.rootViewController = UINavigationController(rootViewController: ViewController())
+        let vc = CompositionalController()
+        window?.rootViewController = UINavigationController(rootViewController: vc)
         
         window?.makeKeyAndVisible()
     }
