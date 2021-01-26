@@ -16,11 +16,16 @@ class CollectionViewController: UIViewController {
     fileprivate let apiUrl = "https://jsonplaceholder.typicode.com/users"
     
     // TODO: DataSource & DataSourceSnapshot typealias
+    typealias DataSouce  = UICollectionViewDiffableDataSource<Section, Contact>
+    typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Contact>
     
     // MARK: - Properties
     private var collectionView: UICollectionView! = nil
     
     // TODO: dataSource & snapshot
+    private var dataSouce: DataSouce!
+    private var snapShot = DataSourceSnapshot()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +35,7 @@ class CollectionViewController: UIViewController {
         configureCollectionViewLayout()
         configureCollectionViewDataSource()
         createDummyData()
-//        fetchItems()
+        fetchItems()
     }
     
 }
@@ -38,6 +43,17 @@ class CollectionViewController: UIViewController {
 // MARK: - Collection View Delegate
 @available(iOS 13.0, *)
 extension CollectionViewController: UICollectionViewDelegate  {
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ContactCell.reuseIdentifier, for: indexPath) as! ContactCell
+////        cell.configure(with: contact)
+//        return cell
+//    }
+//
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return 5
+//    }
+//
+    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // TODO: contact
@@ -77,19 +93,26 @@ extension CollectionViewController {
         // TODO: collectionView
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         collectionView.delegate = self
+        
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .systemBackground
         collectionView.register(ContactCell.self, forCellWithReuseIdentifier: ContactCell.reuseIdentifier)
-        
+        view.addSubview(collectionView)
     }
     
     private func configureCollectionViewDataSource() {
         // TODO: dataSource
+        dataSouce = DataSouce(collectionView: collectionView, cellProvider: { (collectionView, indexPath, contact) -> ContactCell? in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ContactCell.reuseIdentifier, for: indexPath) as! ContactCell
+            cell.configure(with: contact)
+            return cell
+        })
+        
     }
     
     private func createDummyData() {
         var dummyContacts: [Contact] = []
-        for i in 0..<10 {
+        for i in 0..<100 {
             dummyContacts.append(Contact(id: i, name: "Contact \(i)", username: "", email: "example\(i)@gmail.com", address: Contact.Address(street: "", suite: "", city: "", zipcode: "", geo: Contact.Address.Geo(lat: "", lng: "")), phone: "", website: "", company: Contact.Company(name: "", catchPhrase: "", bs: "")))
         }
         applySnapshot(contacts: dummyContacts)
@@ -125,6 +148,10 @@ extension CollectionViewController {
     
     private func applySnapshot(contacts: [Contact]) {
         // TODO: snapshot
+        snapShot = DataSourceSnapshot()
+        snapShot.appendSections([Section.main])
+        snapShot.appendItems(contacts)
+        dataSouce.apply(snapShot, animatingDifferences: false)
     }
     
 }
