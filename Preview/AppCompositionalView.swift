@@ -46,6 +46,7 @@ class CompositionalController : UICollectionViewController {
         item.contentInsets.trailing = 16
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.8), heightDimension: .absolute(270)), subitems: [item])
+
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
         section.contentInsets.leading = 16
@@ -90,7 +91,7 @@ class CompositionalController : UICollectionViewController {
         
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "small", for: indexPath)
-            cell.backgroundColor = .blue
+
             return cell
             
         default:
