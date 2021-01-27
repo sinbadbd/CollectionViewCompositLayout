@@ -9,7 +9,7 @@ import SwiftUI
 //import UIKit
 
 class CompositionalController : UICollectionViewController {
-    
+    let headerId = "header"
     
     init() {
 
@@ -19,7 +19,7 @@ class CompositionalController : UICollectionViewController {
        
             if sectionNumber == 0 {
                 return CompositionalController.topSection()
-            }else if sectionNumber == 1{
+            }else{
                 let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1/3)))
                 item.contentInsets = .init(top: 0, leading: 0, bottom: 16, trailing: 16)
                 
@@ -28,10 +28,18 @@ class CompositionalController : UICollectionViewController {
                 
                 section.orthogonalScrollingBehavior = .groupPaging
                 section.contentInsets.leading = 16
+                
+                let kind = UICollectionView.elementKindSectionHeader
+                section.boundarySupplementaryItems = [
+                    .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(50)), elementKind: kind, alignment: .topLeading)
+                ]
+                
+                
                 return section
-            }else {
-                return CompositionalController.topSection()
             }
+//            else {
+//                return CompositionalController.topSection()
+//            }
         }
         
         super.init(collectionViewLayout: layout)
@@ -52,17 +60,24 @@ class CompositionalController : UICollectionViewController {
         section.contentInsets.leading = 16
         return section
 
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.8), heightDimension: .absolute(300)), subitems: [item])
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPaging
-        section.contentInsets.leading = 32
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        
-        super.init(collectionViewLayout: layout)
+
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    class CollectionViewHeader: UICollectionReusableView {
+        let title = UILabel(text: "Apps Group Title", font: UIFont.systemFont(ofSize: 30), numberOfLines: 1)
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            addSubview(title)
+            title.fillSuperview()
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
     }
     
     override func viewDidLoad(){
@@ -71,11 +86,18 @@ class CompositionalController : UICollectionViewController {
         navigationItem.title = "Apps"
         navigationController?.navigationBar.prefersLargeTitles = true
         collectionView.register(AppHeaderCell.self, forCellWithReuseIdentifier: "cell")
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "small")
+        collectionView.register(CollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
+        collectionView.register(AppRowCell.self, forCellWithReuseIdentifier: "small")
     }
     
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
+        return header
+    }
+    
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        return 8
     }
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 10
@@ -89,15 +111,16 @@ class CompositionalController : UICollectionViewController {
             cell.backgroundColor = .red
             return cell
         
-        case 1:
+        default:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "small", for: indexPath)
-
+//            cell.backgroundColor = .blue
             return cell
             
-        default:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-            cell.backgroundColor = .green
-            return cell
+//        default:
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+//            cell.backgroundColor = .green
+//            return cell
+//
         }
     }
     
