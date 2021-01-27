@@ -45,7 +45,8 @@ class CompositionalController : UICollectionViewController {
         item.contentInsets.bottom = 16
         item.contentInsets.trailing = 16
         
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.8), heightDimension: .absolute(170)), subitems: [item])
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.8), heightDimension: .absolute(270)), subitems: [item])
+
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
         section.contentInsets.leading = 16
@@ -69,7 +70,8 @@ class CompositionalController : UICollectionViewController {
         collectionView.backgroundColor = .white
         navigationItem.title = "Apps"
         navigationController?.navigationBar.prefersLargeTitles = true
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(AppHeaderCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "small")
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -88,8 +90,8 @@ class CompositionalController : UICollectionViewController {
             return cell
         
         case 1:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-            cell.backgroundColor = .blue
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "small", for: indexPath)
+
             return cell
             
         default:

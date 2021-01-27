@@ -1,12 +1,6 @@
 //
-//  UIView+Extension.swift
-//  CollectionViewCompositLayout
-//
-//  Created by Imran on 25/1/21.
-//
-
+//  UIView+Layout.swift
 import UIKit
-
 extension UIView {
     
     @discardableResult
